@@ -93,6 +93,12 @@ public class Configuration_client extends Activity {
             // constantly takes pictures.
         	while(running){
         		mCamera.takePicture(null, null, mPicture);
+        		try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
         	}
         }
     } 
