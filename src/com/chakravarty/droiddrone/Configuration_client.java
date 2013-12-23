@@ -1,5 +1,6 @@
 package com.chakravarty.droiddrone;
 
+import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import android.os.Bundle;
 import android.app.Activity;
@@ -26,14 +27,23 @@ public class Configuration_client extends Activity {
 	    	bm.copyPixelsFromBuffer(ByteBuffer.wrap(data));
 	    }
 	};
-	public void turn(){
+	public void turn(String Request){
     }
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration_client);
-    //TODO - get this working: fg.onRoute("/home*", turn, this);
+        Class[] parameterTypes = new Class[1];
+        parameterTypes[0] = String.class;
+		Method method1;
+		try {
+			method1 = Configuration_client.class.getMethod("turn", parameterTypes);
+			fg.onRoute("/home*", this, method1);
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         fg.start();
         
         mCamera = Camera.open();
