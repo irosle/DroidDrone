@@ -19,11 +19,12 @@ public class Configuration_client extends Activity {
 	//This acts as the server;
 	httpServer fg;
 	Camera mCamera;
+	Bitmap bm;
 	private PictureCallback mPicture = new PictureCallback() {
 
 	    @Override
 	    public void onPictureTaken(byte[] data, Camera camera) {
-	    	Bitmap bm = Bitmap.createBitmap(80, 60, Bitmap.Config.RGB_565);
+	    	bm = Bitmap.createBitmap(80, 60, Bitmap.Config.RGB_565);
 	    	bm.copyPixelsFromBuffer(ByteBuffer.wrap(data));
 	    }
 	};
@@ -34,14 +35,14 @@ public class Configuration_client extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration_client);
-        Class[] parameterTypes = new Class[1];
+        @SuppressWarnings("rawtypes")
+		Class[] parameterTypes = new Class[1];
         parameterTypes[0] = String.class;
 		Method method1;
 		try {
 			method1 = Configuration_client.class.getMethod("turn", parameterTypes);
 			fg.onRoute("/home*", this, method1);
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         fg.start();
@@ -83,14 +84,16 @@ public class Configuration_client extends Activity {
         return c; // returns null if camera is unavailable
     }
     class firstResponder extends Thread {
-      
-    	firstResponder(long minPrime) {
+    	boolean running = true;
+    	firstResponder() {
            
         }
 
         public void run() {
-            // compute primes larger than minPrime
-             
+            // constantly takes pictures.
+        	while(running){
+        		mCamera.takePicture(null, null, mPicture);
+        	}
         }
     } 
 }
