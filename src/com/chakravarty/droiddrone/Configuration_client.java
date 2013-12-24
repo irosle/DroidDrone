@@ -12,6 +12,8 @@ import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.view.Menu;
 import com.chakravarty.httpServer.*;
+import com.chakravarty.duinControl.*;
+import com.chakravarty.wsst.*;
 
 
 
@@ -20,28 +22,71 @@ public class Configuration_client extends Activity {
 	httpServer fg;
 	Camera mCamera;
 	Bitmap bm;
+	Duino arduino;
+	videoStream vs = new videoStream();
 	private PictureCallback mPicture = new PictureCallback() {
 
 	    @Override
 	    public void onPictureTaken(byte[] data, Camera camera) {
 	    	bm = Bitmap.createBitmap(80, 60, Bitmap.Config.RGB_565);
 	    	bm.copyPixelsFromBuffer(ByteBuffer.wrap(data));
+	    	vs.pushImage(bm);
 	    }
 	};
 	public void turn(String Request){
+		Request = "<htmL></html>";
     }
-	
+	public void left(String Request){
+		Request = "<htmL></html>";
+		arduino.sendChar('l');
+    }
+	public void right(String Request){
+		Request = "<htmL></html>";
+		arduino.sendChar('r');
+    }
+	public void stop(String Request){
+		Request = "<htmL></html>";
+		arduino.sendChar('s');
+    }
+	public void video(String Request){
+		Request = "<htmL></html>";
+		vs.render();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration_client);
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings("rawtypes");
 		Class[] parameterTypes = new Class[1];
         parameterTypes[0] = String.class;
 		Method method1;
 		try {
 			method1 = Configuration_client.class.getMethod("turn", parameterTypes);
 			fg.onRoute("/home*", this, method1);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		try {
+			method1 = Configuration_client.class.getMethod("left", parameterTypes);
+			fg.onRoute("/left", this, method1);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		try {
+			method1 = Configuration_client.class.getMethod("right", parameterTypes);
+			fg.onRoute("/right", this, method1);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		try {
+			method1 = Configuration_client.class.getMethod("stop", parameterTypes);
+			fg.onRoute("/left", this, method1);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		try {
+			method1 = Configuration_client.class.getMethod("video", parameterTypes);
+			fg.onRoute("/video.txt", this, method1);
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}

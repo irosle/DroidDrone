@@ -10,7 +10,7 @@ import android.graphics.Bitmap;
 public class videoStream  {
 	Bitmap previous;
 	boolean initialValue = true;
-	videoStream(){
+	public videoStream(){
 		
 	}
 	public void pushImage(Bitmap bm){
